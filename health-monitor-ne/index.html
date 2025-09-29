@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Health Monitoring System - Northeast India</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen active">
+        <div class="login-container">
+            <div class="login-card card">
+                <div class="card__body">
+                    <div class="login-header">
+                        <i class="fas fa-heartbeat"></i>
+                        <h1>Smart Health Monitoring</h1>
+                        <p>Northeast India Water-Borne Disease Prevention</p>
+                    </div>
+                    <div class="role-selection">
+                        <h3>Select Your Role</h3>
+                        <div class="role-buttons">
+                            <button class="btn btn--primary btn--full-width role-btn" data-role="health-official">
+                                <i class="fas fa-user-md"></i>
+                                <span>Health Official</span>
+                                <small>District level monitoring & alerts</small>
+                            </button>
+                            <button class="btn btn--primary btn--full-width role-btn" data-role="asha-worker">
+                                <i class="fas fa-user-nurse"></i>
+                                <span>ASHA Worker</span>
+                                <small>Community health reporting</small>
+                            </button>
+                            <button class="btn btn--primary btn--full-width role-btn" data-role="community-volunteer">
+                                <i class="fas fa-users"></i>
+                                <span>Community Volunteer</span>
+                                <small>Local health monitoring</small>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="main-nav" class="main-nav hidden">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-heartbeat"></i>
+                <span class="nav-title">Health Monitor</span>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-item active" data-view="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-view="alerts">
+                    <i class="fas fa-bell"></i>
+                    <span>Alerts</span>
+                </button>
+                <button class="nav-item" data-view="water-quality">
+                    <i class="fas fa-tint"></i>
+                    <span>Water Quality</span>
+                </button>
+                <button class="nav-item" data-view="education">
+                    <i class="fas fa-book"></i>
+                    <span>Education</span>
+                </button>
+                <button class="nav-item" data-view="predictions">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Predictions</span>
+                </button>
+            </div>
+            <div class="nav-user">
+                <div class="language-toggle">
+                    <select id="language-select" class="form-control form-control--sm">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी</option>
+                        <option value="as">অসমীয়া</option>
+                        <option value="bn">বাংলা</option>
+                    </select>
+                </div>
+                <button class="btn btn--secondary btn--sm" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Health Official Dashboard -->
+    <div id="health-official-dashboard" class="screen dashboard-screen">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2>Disease Surveillance Dashboard</h2>
+                <div class="sync-status">
+                    <i class="fas fa-sync-alt spinning"></i>
+                    <span>Last updated: 2 minutes ago</span>
+                </div>
+            </div>
+
+            <!-- Key Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card card">
+                    <div class="card__body">
+                        <div class="stat-icon">
+                            <i class="fas fa-virus"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="total-cases">2,365</h3>
+                            <p>Active Cases</p>
+                            <span class="status status--error">+12% this week</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card card">
+                    <div class="card__body">
+                        <div class="stat-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="water-issues">1,005</h3>
+                            <p>Water Quality Issues</p>
+                            <span class="status status--warning">+5% this week</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card card">
+                    <div class="card__body">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-nurse"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="active-workers">38,500</h3>
+                            <p>Active ASHA Workers</p>
+                            <span class="status status--success">Online today</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card card">
+                    <div class="card__body">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="active-alerts">3</h3>
+                            <p>Active Alerts</p>
+                            <span class="status status--error">1 Critical</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disease Chart and Map -->
+            <div class="dashboard-grid">
+                <div class="chart-section card">
+                    <div class="card__body">
+                        <h3>Disease Trends</h3>
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="disease-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="map-section card">
+                    <div class="card__body">
+                        <h3>Regional Overview</h3>
+                        <div class="state-list">
+                            <div class="state-item" data-state="assam">
+                                <div class="state-info">
+                                    <strong>Assam</strong>
+                                    <span class="case-count">1,250 cases</span>
+                                </div>
+                                <div class="severity-indicator critical"></div>
+                            </div>
+                            <div class="state-item" data-state="meghalaya">
+                                <div class="state-info">
+                                    <strong>Meghalaya</strong>
+                                    <span class="case-count">340 cases</span>
+                                </div>
+                                <div class="severity-indicator high"></div>
+                            </div>
+                            <div class="state-item" data-state="manipur">
+                                <div class="state-info">
+                                    <strong>Manipur</strong>
+                                    <span class="case-count">180 cases</span>
+                                </div>
+                                <div class="severity-indicator medium"></div>
+                            </div>
+                            <div class="state-item" data-state="mizoram">
+                                <div class="state-info">
+                                    <strong>Mizoram</strong>
+                                    <span class="case-count">75 cases</span>
+                                </div>
+                                <div class="severity-indicator low"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ASHA Worker Dashboard -->
+    <div id="asha-worker-dashboard" class="screen dashboard-screen">
+        <div class="container">
+            <div class="mobile-header">
+                <h2>ASHA Worker Dashboard</h2>
+                <div class="sync-indicator">
+                    <i class="fas fa-wifi" id="connection-status"></i>
+                    <span id="sync-status">Synced</span>
+                </div>
+            </div>
+
+            <div class="mobile-actions">
+                <button class="action-btn btn--primary" onclick="showReportingForm()">
+                    <i class="fas fa-plus"></i>
+                    <span>Report Symptoms</span>
+                </button>
+                <button class="action-btn btn--secondary" onclick="showWaterQualityForm()">
+                    <i class="fas fa-flask"></i>
+                    <span>Water Test</span>
+                </button>
+                <button class="action-btn btn--secondary" onclick="showPatientTracking()">
+                    <i class="fas fa-user-check"></i>
+                    <span>Patient Tracking</span>
+                </button>
+                <button class="action-btn btn--secondary" onclick="showEducation()">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Education</span>
+                </button>
+            </div>
+
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Reports Today</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Water Tests</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="stat-number">42</div>
+                    <div class="stat-label">Patients Tracked</div>
+                </div>
+            </div>
+
+            <!-- Symptom Reporting Form -->
+            <div id="symptom-form" class="form-section card hidden">
+                <div class="card__body">
+                    <h3>Symptom Reporting</h3>
+                    <form id="symptom-report-form">
+                        <div class="form-group">
+                            <label class="form-label">Patient Name</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Age</label>
+                            <input type="number" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Symptoms (Check all that apply)</label>
+                            <div class="checkbox-grid">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" value="diarrhea"> Diarrhea
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" value="vomiting"> Vomiting
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" value="fever"> Fever
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" value="dehydration"> Dehydration
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" value="abdominal-pain"> Abdominal Pain
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" value="nausea"> Nausea
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Duration (days)</label>
+                            <select class="form-control">
+                                <option>1 day</option>
+                                <option>2-3 days</option>
+                                <option>4-7 days</option>
+                                <option>More than 1 week</option>
+                            </select>
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn--primary">Submit Report</button>
+                            <button type="button" class="btn btn--secondary" onclick="hideReportingForm()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Community Volunteer Dashboard -->
+    <div id="community-volunteer-dashboard" class="screen dashboard-screen">
+        <div class="container">
+            <h2>Community Health Monitor</h2>
+            
+            <div class="community-stats">
+                <div class="community-card card">
+                    <div class="card__body">
+                        <h4>Community Health Status</h4>
+                        <div class="health-indicator">
+                            <div class="indicator-item">
+                                <span class="indicator-label">Overall Health</span>
+                                <span class="status status--warning">Moderate Risk</span>
+                            </div>
+                            <div class="indicator-item">
+                                <span class="indicator-label">Water Safety</span>
+                                <span class="status status--error">High Risk</span>
+                            </div>
+                            <div class="indicator-item">
+                                <span class="indicator-label">Disease Prevention</span>
+                                <span class="status status--success">Good</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="volunteer-actions">
+                <button class="btn btn--primary btn--full-width" onclick="reportCommunityHealth()">
+                    <i class="fas fa-clipboard-list"></i>
+                    Report Community Health
+                </button>
+                <button class="btn btn--secondary btn--full-width" onclick="scheduleHealthMeeting()">
+                    <i class="fas fa-calendar"></i>
+                    Schedule Health Meeting
+                </button>
+                <button class="btn btn--secondary btn--full-width" onclick="accessEducationalResources()">
+                    <i class="fas fa-book-open"></i>
+                    Educational Resources
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts View -->
+    <div id="alerts-view" class="screen view-screen">
+        <div class="container">
+            <div class="view-header">
+                <h2>Alert Management</h2>
+                <div class="alert-filters">
+                    <select class="form-control">
+                        <option>All Alerts</option>
+                        <option>Critical</option>
+                        <option>High</option>
+                        <option>Medium</option>
+                        <option>Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="alerts-list">
+                <div class="alert-item card critical">
+                    <div class="card__body">
+                        <div class="alert-header">
+                            <div class="alert-type">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Disease Outbreak</span>
+                            </div>
+                            <span class="status status--error">Critical</span>
+                        </div>
+                        <div class="alert-content">
+                            <h4>Cholera Outbreak Detected</h4>
+                            <p>Dibrugarh District, Assam - 15 confirmed cases</p>
+                            <div class="alert-meta">
+                                <span><i class="fas fa-clock"></i> 2 hours ago</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Dibrugarh, Assam</span>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn--primary btn--sm">Deploy Response Team</button>
+                            <button class="btn btn--secondary btn--sm">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-item card high">
+                    <div class="card__body">
+                        <div class="alert-header">
+                            <div class="alert-type">
+                                <i class="fas fa-tint"></i>
+                                <span>Water Contamination</span>
+                            </div>
+                            <span class="status status--warning">High</span>
+                        </div>
+                        <div class="alert-content">
+                            <h4>Water Source Contamination</h4>
+                            <p>Shillong, Meghalaya - E.coli levels exceed safe limits</p>
+                            <div class="alert-meta">
+                                <span><i class="fas fa-clock"></i> 5 hours ago</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Shillong, Meghalaya</span>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn--primary btn--sm">Issue Advisory</button>
+                            <button class="btn btn--secondary btn--sm">Schedule Testing</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Water Quality View -->
+    <div id="water-quality-view" class="screen view-screen">
+        <div class="container">
+            <h2>Water Quality Monitoring</h2>
+            
+            <div class="water-quality-grid">
+                <div class="quality-params card">
+                    <div class="card__body">
+                        <h3>Current Parameters</h3>
+                        <div class="param-list">
+                            <div class="param-item">
+                                <span class="param-name">pH Level</span>
+                                <span class="param-value">7.2</span>
+                                <span class="status status--success">Normal</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-name">Turbidity</span>
+                                <span class="param-value">1.8 NTU</span>
+                                <span class="status status--warning">Elevated</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-name">Chlorine</span>
+                                <span class="param-value">0.4 mg/L</span>
+                                <span class="status status--success">Normal</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-name">E.coli</span>
+                                <span class="param-value">12 CFU/100ml</span>
+                                <span class="status status--error">High</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quality-chart card">
+                    <div class="card__body">
+                        <h3>Quality Trends</h3>
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="water-quality-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Education View -->
+    <div id="education-view" class="screen view-screen">
+        <div class="container">
+            <h2>Health Education Modules</h2>
+            
+            <div class="education-grid">
+                <div class="education-card card">
+                    <div class="card__body">
+                        <div class="module-header">
+                            <i class="fas fa-tint"></i>
+                            <h4>Water Purification Methods</h4>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 78%;"></div>
+                        </div>
+                        <p>Community completion: 78%</p>
+                        <button class="btn btn--primary btn--sm">Start Learning</button>
+                    </div>
+                </div>
+                
+                <div class="education-card card">
+                    <div class="card__body">
+                        <div class="module-header">
+                            <i class="fas fa-virus"></i>
+                            <h4>Diarrhea Prevention</h4>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%;"></div>
+                        </div>
+                        <p>Community completion: 85%</p>
+                        <button class="btn btn--primary btn--sm">Start Learning</button>
+                    </div>
+                </div>
+
+                <div class="education-card card">
+                    <div class="card__body">
+                        <div class="module-header">
+                            <i class="fas fa-hands-wash"></i>
+                            <h4>Hand Hygiene</h4>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 92%;"></div>
+                        </div>
+                        <p>Community completion: 92%</p>
+                        <button class="btn btn--primary btn--sm">Start Learning</button>
+                    </div>
+                </div>
+
+                <div class="education-card card">
+                    <div class="card__body">
+                        <div class="module-header">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h4>Cholera Awareness</h4>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 67%;"></div>
+                        </div>
+                        <p>Community completion: 67%</p>
+                        <button class="btn btn--primary btn--sm">Start Learning</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Predictions View -->
+    <div id="predictions-view" class="screen view-screen">
+        <div class="container">
+            <h2>AI Disease Prediction</h2>
+            
+            <div class="predictions-grid">
+                <div class="prediction-summary card">
+                    <div class="card__body">
+                        <h3>Risk Assessment</h3>
+                        <div class="risk-indicators">
+                            <div class="risk-item">
+                                <span class="risk-label">Cholera Outbreak Risk</span>
+                                <span class="status status--error">High (85%)</span>
+                            </div>
+                            <div class="risk-item">
+                                <span class="risk-label">Diarrhea Spread</span>
+                                <span class="status status--warning">Medium (60%)</span>
+                            </div>
+                            <div class="risk-item">
+                                <span class="risk-label">Typhoid Cases</span>
+                                <span class="status status--success">Low (25%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="prediction-chart card">
+                    <div class="card__body">
+                        <h3>Prediction Model</h3>
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="prediction-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loading-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="loading-spinner"></div>
+            <p>Processing...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
